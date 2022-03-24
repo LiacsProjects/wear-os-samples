@@ -18,6 +18,11 @@ package com.example.android.wearable.composeadvanced.presentation.navigation
 // Used as a Navigation Argument for the WatchDetail Screen.
 const val WATCH_ID_NAV_ARGUMENT = "watchId"
 
+// Navigation Argument for Screens with scrollable types:
+// 1. WatchList -> ScalingLazyColumn
+// 2. WatchDetail -> Column (with scaling enabled)
+const val SCROLL_TYPE_NAV_ARGUMENT = "scrollType"
+
 /**
  * Represent all Screens (Composables) in the app.
  */
@@ -27,4 +32,7 @@ sealed class Screen(
     object Landing : Screen("landing")
     object WatchList : Screen("watchList")
     object WatchDetail : Screen("watchDetail")
+    object UserInputComponents : Screen("userInputComponents")
+    object Stepper : Screen("stepper")
+    object Slider : Screen("slider")
 }

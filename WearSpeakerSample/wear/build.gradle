@@ -15,9 +15,8 @@
  */
 
 plugins {
-    id "com.android.application"
-    id "kotlin-android"
-    id "kotlin-parcelize"
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
 }
 
 android {
@@ -26,12 +25,22 @@ android {
     defaultConfig {
         versionCode 1
         versionName "1.0"
-        minSdkVersion 26
-        targetSdkVersion 30
+        minSdk 26
+        targetSdk 30
     }
 
     lintOptions {
-        ignore "OldTargetApi" // API >30 doesn't exist for Wear OS
+        ignore "OldTargetApi" // API >30 doesn"t exist for Wear OS
+    }
+
+    buildTypes {
+        release {
+            isDefault = true
+            minifyEnabled true
+            shrinkResources true
+            signingConfig signingConfigs.debug
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+        }
     }
 
     compileOptions {
@@ -44,20 +53,22 @@ android {
     }
 
     buildFeatures {
-        viewBinding true
+        compose true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion libs.versions.compose.get()
     }
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0"
-    implementation "androidx.activity:activity-ktx:1.4.0"
-    implementation "androidx.appcompat:appcompat:1.4.0"
-    implementation "androidx.constraintlayout:constraintlayout:2.1.2"
-    implementation "androidx.core:core-ktx:1.7.0"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0"
-    implementation "androidx.media:media:1.4.3"
-    implementation "androidx.percentlayout:percentlayout:1.0.0"
-    implementation "androidx.vectordrawable:vectordrawable-animated:1.1.0"
-    implementation "androidx.wear:wear:1.2.0"
+    implementation libs.kotlinx.coroutines.android
+    implementation libs.androidx.activity.compose
+    implementation libs.compose.material.ripple
+    implementation libs.compose.material.icons.extended
+    implementation libs.compose.ui.tooling
+    implementation libs.androidx.constraintlayout.compose
+    implementation libs.androidx.lifecycle.runtime.ktx
+    implementation libs.androidx.media
+    implementation libs.wear.compose.material
 }
