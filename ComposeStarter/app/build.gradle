@@ -19,7 +19,7 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.example.android.wearable.composestarter"
@@ -31,7 +31,6 @@ android {
 
     buildTypes {
         release {
-            isDefault = true
             minifyEnabled true
             shrinkResources true
             signingConfig signingConfigs.debug
@@ -45,13 +44,12 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
-        useIR = true
     }
     buildFeatures {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion libs.versions.compose.get()
+        kotlinCompilerExtensionVersion libs.versions.compose.compiler.get()
     }
     packagingOptions {
         resources {

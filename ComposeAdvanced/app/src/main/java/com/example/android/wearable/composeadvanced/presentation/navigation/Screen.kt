@@ -35,4 +35,13 @@ sealed class Screen(
     object UserInputComponents : Screen("userInputComponents")
     object Stepper : Screen("stepper")
     object Slider : Screen("slider")
+    object Map : Screen("map")
+    object DatePicker : Screen("date")
+    object Time12hPicker : Screen("time12h")
+    object Time24hPicker : Screen("time24h")
+    object Dialogs : Screen("dialogs")
+    object ProgressIndicators : Screen("progressIndicators")
+    object IndeterminateProgressIndicator : Screen("indeterminateProgressIndicator")
+    object FullScreenProgressIndicator : Screen("fullScreenProgressIndicator")
+    object Theme : Screen("theme")
 }

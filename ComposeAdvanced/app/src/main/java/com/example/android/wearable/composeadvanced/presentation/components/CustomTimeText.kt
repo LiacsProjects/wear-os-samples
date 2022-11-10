@@ -16,17 +16,22 @@
 package com.example.android.wearable.composeadvanced.presentation.components
 
 import android.content.res.Configuration
+import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.wear.compose.foundation.CurvedTextStyle
-import androidx.wear.compose.material.CurvedText
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.TimeText
 import androidx.wear.compose.material.TimeTextDefaults
+import androidx.wear.compose.material.curvedText
+import com.example.android.wearable.composeadvanced.BuildConfig
 
 /**
  * Custom version of TimeText (Curved Text) that enables leading text (if wanted) and hides while
@@ -35,31 +40,63 @@ import androidx.wear.compose.material.TimeTextDefaults
 @Composable
 fun CustomTimeText(
     visible: Boolean,
-    showLeadingText: Boolean,
-    leadingText: String
+    modifier: Modifier = Modifier,
+    startText: String? = null
 ) {
+    val textStyle = TimeTextDefaults.timeTextStyle()
+    val debugWarning = remember {
+        val isEmulator = Build.PRODUCT.startsWith("sdk_gwear")
+
+        if (BuildConfig.DEBUG && !isEmulator) {
+            "Debug (slower)"
+        } else {
+            null
+        }
+    }
+    val showWarning = debugWarning != null
     AnimatedVisibility(
         visible = visible,
         enter = fadeIn(),
-        exit = fadeOut(),
+        exit = fadeOut()
     ) {
+        val visibleText = startText != null
         TimeText(
-            leadingCurvedContent = if (showLeadingText) {
+            modifier = modifier,
+            startCurvedContent = if (visibleText) {
                 {
-                    CurvedText(
-                        text = leadingText,
-                        style = CurvedTextStyle(TimeTextDefaults.timeTextStyle())
+                    curvedText(
+                        text = startText!!,
+                        style = CurvedTextStyle(textStyle)
                     )
                 }
             } else null,
-            leadingLinearContent = if (showLeadingText) {
+            startLinearContent = if (visibleText) {
                 {
                     Text(
-                        text = leadingText,
-                        style = TimeTextDefaults.timeTextStyle()
+                        text = startText!!,
+                        style = textStyle
                     )
                 }
             } else null,
+            // Trailing text is against Wear UX guidance, used here just for development.
+            endCurvedContent = if (showWarning) {
+                {
+                    curvedText(
+                        text = debugWarning!!,
+                        style = CurvedTextStyle(textStyle),
+                        color = Color.Red
+                    )
+                }
+            } else null,
+            endLinearContent = if (showWarning) {
+                {
+                    Text(
+                        text = debugWarning!!,
+                        style = textStyle,
+                        color = Color.Red
+                    )
+                }
+            } else null
         )
     }
 }
@@ -87,7 +124,6 @@ fun CustomTimeText(
 fun PreviewCustomTimeText() {
     CustomTimeText(
         visible = true,
-        showLeadingText = true,
-        leadingText = "Testing Leading Text..."
+        startText = "Testing Leading Text..."
     )
 }

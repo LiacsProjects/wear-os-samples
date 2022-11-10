@@ -22,7 +22,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.Stepper
+import androidx.wear.compose.material.StepperDefaults
 import androidx.wear.compose.material.Text
 
 /**
@@ -31,10 +33,11 @@ import androidx.wear.compose.material.Text
 @Composable
 fun StepperScreen(
     displayValue: Int,
-    onValueChange: (Int) -> Unit
+    onValueChange: (Int) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(top = 10.dp),
         verticalArrangement = Arrangement.Center
@@ -42,7 +45,11 @@ fun StepperScreen(
         Stepper(
             value = displayValue,
             onValueChange = onValueChange,
-            valueProgression = 1..10
-        ) { Text("Value: $displayValue") }
+            valueProgression = 1..10,
+            increaseIcon = { Icon(StepperDefaults.Increase, "Increase") },
+            decreaseIcon = { Icon(StepperDefaults.Decrease, "Decrease") }
+        ) {
+            Text("Value: $displayValue")
+        }
     }
 }

@@ -30,7 +30,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material.Chip
 import androidx.wear.compose.material.Icon
-import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
 import com.example.android.wearable.composeadvanced.R
 
@@ -39,40 +38,35 @@ import com.example.android.wearable.composeadvanced.R
  */
 @Composable
 fun WatchAppChip(
-    modifier: Modifier = Modifier,
     watchModelNumber: Int,
     watchName: String,
     watchIcon: Int,
-    onClickWatch: (Int) -> Unit
+    onClickWatch: (Int) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Chip(
-        modifier = modifier,
-        enabled = true,
+        modifier = modifier.fillMaxWidth(),
         icon = {
             Icon(
                 painter = painterResource(id = watchIcon),
                 contentDescription = stringResource(R.string.watch_icon_content_description),
                 modifier = Modifier
                     .size(24.dp)
-                    .wrapContentSize(align = Alignment.Center),
+                    .wrapContentSize(align = Alignment.Center)
             )
         },
         label = {
             Text(
-                modifier = Modifier.fillMaxWidth(),
-                color = MaterialTheme.colors.onPrimary,
                 text = watchName,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
+                overflow = TextOverflow.Ellipsis
             )
         },
         secondaryLabel = {
             Text(
-                modifier = Modifier.fillMaxWidth(),
-                color = MaterialTheme.colors.onPrimary,
                 text = "id: $watchModelNumber",
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
+                overflow = TextOverflow.Ellipsis
             )
         },
         onClick = {
@@ -83,13 +77,12 @@ fun WatchAppChip(
 
 @Preview(
     apiLevel = 26,
-    uiMode = Configuration.UI_MODE_TYPE_WATCH,
+    uiMode = Configuration.UI_MODE_TYPE_WATCH
 )
 @Composable
 fun PreviewWatchAppChip() {
     Box {
         WatchAppChip(
-            modifier = Modifier.fillMaxWidth(),
             watchModelNumber = 123456,
             watchName = "Watch 123456 Name",
             watchIcon = R.drawable.ic_watch,

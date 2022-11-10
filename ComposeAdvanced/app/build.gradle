@@ -19,8 +19,14 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+Properties localProperties = new Properties()
+def localFile = project.rootProject.file('local.properties')
+if (localFile.exists()) {
+    localProperties.load(localFile.newDataInputStream())
+}
+
 android {
-    compileSdk 31
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.example.android.wearable.composeadvanced"
@@ -28,15 +34,28 @@ android {
         targetSdk 30
         versionCode 1
         versionName "1.0"
+
+        applicationId "com.example.android.wearable.composeadvanced"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        def mapsApiKey = localProperties.getProperty("mapsApiKey", "")
+        manifestPlaceholders["mapsApiKey"] = mapsApiKey
+        buildConfigField("String", "mapsApiKey", "\"${mapsApiKey}\"")
     }
 
     buildTypes {
         release {
-            isDefault = true
             minifyEnabled true
             shrinkResources true
             signingConfig signingConfigs.debug
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+        }
+        benchmark {
+            initWith buildTypes.release
+            signingConfig signingConfigs.debug
+            debuggable false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'benchmark-rules.pro'
         }
     }
     compileOptions {
@@ -45,7 +64,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
-        freeCompilerArgs += "-Xjvm-default=compatibility"
+        freeCompilerArgs += "-Xjvm-default=all"
         freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
         // Allow for widescale experimental APIs in Alpha libraries we build upon
         freeCompilerArgs += "-opt-in=androidx.wear.compose.material.ExperimentalWearMaterialApi"
@@ -56,7 +75,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion libs.versions.compose.get()
+        kotlinCompilerExtensionVersion libs.versions.compose.compiler.get()
     }
     packagingOptions {
         resources {
@@ -69,9 +88,10 @@ dependencies {
     // General compose dependencies
     implementation libs.androidx.activity.compose
     implementation libs.compose.ui.tooling.preview
-    implementation libs.compose.compiler
     implementation libs.compose.foundation
     implementation libs.androidx.lifecycle.viewmodel.compose
+    implementation libs.compose.material.iconscore
+    implementation libs.compose.material.iconsext
 
     // ViewModel
     implementation libs.androidx.lifecycle.viewmodel.ktx
@@ -96,6 +116,22 @@ dependencies {
     // If you are using Compose Navigation, use the Wear OS version (NOT the
     // androidx.navigation:navigation-compose version), that is, uncomment the line below.
     implementation libs.wear.compose.navigation
+    implementation libs.navigation.ui.ktx
+
+    // Performance
+    implementation libs.androidx.metrics.performance
+
+    // Google Maps
+    implementation libs.com.google.maps.compose
+    implementation libs.com.google.play.services.maps
+
+    // Horologist
+    implementation libs.horologist.composables
+    implementation libs.horologist.compose.layout
+    implementation libs.wear.input
+
+    implementation libs.androidx.splashscreen
+    implementation libs.androidx.tracing.ktx
 
     // Testing
     testImplementation libs.junit
@@ -103,4 +139,10 @@ dependencies {
     androidTestImplementation libs.test.espresso.core
     androidTestImplementation libs.compose.ui.test.junit4
     debugImplementation libs.compose.ui.tooling
+
+    androidTestImplementation libs.androidx.test.ext
+    androidTestImplementation libs.androidx.test.ext.ktx
+    androidTestImplementation libs.androidx.test.espresso.core
+    androidTestImplementation libs.compose.ui.test.junit4
+    androidTestImplementation libs.compose.ui.test.manifest
 }
